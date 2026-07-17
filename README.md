@@ -39,44 +39,11 @@ This architecture makes the system easier to maintain, test, extend and deploy.
 
 # System Architecture
 
-```
-                    ┌─────────────────────────────┐
-                    │        PySide6 GUI          │
-                    │                             │
-                    │ Chat • Microphone • Status  │
-                    └──────────────┬──────────────┘
-                                   │
-                                   ▼
-                    ┌─────────────────────────────┐
-                    │     Assistant Worker        │
-                    │     (Background Thread)     │
-                    └──────────────┬──────────────┘
-                                   │
-          ┌────────────────────────┼────────────────────────┐
-          ▼                        ▼                        ▼
-    Whisper STT              Ollama (Gemma 3)          Piper TTS
- Speech Recognition       Planning & Reasoning      Speech Synthesis
-          │                        │                        │
-          └────────────────────────┴────────────────────────┘
-                                   │
-                                   ▼
-                     Shared Communication Layer
-                     ├── shared/audio/echo.wav
-                     └── shared/action.json
-                                   │
-                      ┌────────────┴────────────┐
-                      ▼                         ▼
-               Robot Audio Service      Action Controller
-                  (WebRTC)             (Motion Commands)
-                      │                         │
-                      └────────────┬────────────┘
-                                   ▼
-                           Unitree Go2 X
-```
+![Screenshot](https://github.com/fredcodess/unitree-go2-intelligent-middleware/blob/main/screenshots/system-architecture.png?raw=true)
 
 ---
 
-# Design Philosophy
+# Design
 
 The middleware follows a **loosely coupled architecture**.
 
@@ -102,27 +69,7 @@ Advantages include:
 
 # AI Pipeline
 
-```
-User Speech
-      │
-      ▼
- Whisper
-      │
-Speech → Text
-      │
-      ▼
- Robot Planner
-      │
- Structured JSON
-      │
-      ▼
- Piper
-      │
- Speech Audio
-      │
-      ▼
- echo.wav
-```
+![Screenshot](https://github.com/fredcodess/unitree-go2-intelligent-middleware/blob/main/screenshots/ai-pipeline.png?raw=true)
 
 Example planner output:
 
@@ -289,37 +236,7 @@ Future work includes:
 
 The graphical interface remains responsive by performing AI processing inside a dedicated worker thread.
 
-```
-GUI Thread
-
-↓
-
-Signals
-
-↓
-
-Assistant Worker
-
-↓
-
-Whisper
-
-↓
-
-Ollama
-
-↓
-
-Piper
-
-↓
-
-Signals
-
-↓
-
-GUI Updates
-```
+![Screenshot](https://github.com/fredcodess/unitree-go2-intelligent-middleware/blob/main/screenshots/gui-thread-pipeline.png?raw=true)
 
 ---
 
@@ -347,11 +264,13 @@ go2-intelligent-middleware/
 │   ├── worker.py
 │   ├── main_window.py
 │   ├── chat_widget.py
-│   └── status_panel.py
+|   └── status_panel.py
 │
-└── shared/
-    ├── audio/
-    └── action.json
+├── shared/
+|   ├── audio/
+|   └── action.json
+|
+└── run.py
 ```
 
 ---
@@ -469,6 +388,7 @@ Run the application:
 ```bash
 python run.py
 ```
+![Screenshot](https://github.com/fredcodess/unitree-go2-intelligent-middleware/blob/main/screenshots/start-app.png?raw=true)
 
 The application will automatically:
 
